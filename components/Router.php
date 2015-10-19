@@ -26,13 +26,9 @@ class Router
 
       // Сравниваем $uriPattern и $uri
       if (preg_match("~$uriPattern~", $uri)) {
-      // echo '<br>Запрос,который набрал пользователь: '.$uri;
-      // echo '<br>Совпадение из правила: '.$uriPattern;
-      // echo '<br>Обрабатывает: '.$path;
 
         // Получаем внутренний путь из внешнего согласно правилу.
         $internalRoute = preg_replace("~$uriPattern~", $path, $uri);
-       // echo '<br>Внутренний маршрут: '.$internalRoute;
 
         // Определяем контроллер, action, параметры
         $segments = explode('/', $internalRoute);
@@ -41,11 +37,6 @@ class Router
         $actionName = 'action' . ucfirst(array_shift($segments));
 
         $parameters = $segments;
-        // echo '<br>controller name: '.$controllerName;
-        // echo '<br>action name: '.$actionName;
-        // echo '<pre>';
-        // print_r($parameters);
-        // echo '</pre>';
 
         // Подключаем файл класса-контроллера
         $controllerFile = ROOT . '/controllers/' . $controllerName . '.php';

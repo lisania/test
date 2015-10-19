@@ -8,6 +8,6 @@
     <input type="email" class="form-control" name="login" placeholder="Email" required />
     <input type="password" class="form-control" name="password" placeholder="Пароль" required />
     <input type="submit" class="btn btn-lg btn-primary btn-block" name="submit" value="Зарегистрироваться">
-    <p>Уже зарегистрированы? <a href="/user/login">Войти</a></p>
+    <h5>Уже зарегистрированы? <a href="/user/login">Войти</a></h5>
   </div>
 </form>

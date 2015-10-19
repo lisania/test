@@ -121,9 +121,9 @@ class User
       </a>
       <a href='/admin/delete/".$value['id']."'>
       <button type='submit' name='submit' class='btn btn-default '>Удалить</button>
-      </a></div></br>";
+      </a></div><br>";
     }
-    echo "</br>Всего пользователей: ".$cnt."</br>";
+    echo "<div>Всего пользователей: ".$cnt."</div><br>";
     for ($x=1 ; $x<=ceil($cnt/$limit); $x++ ) {
       if ($offset==$x) {
         echo "Страница ".$x." ";
