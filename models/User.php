@@ -28,6 +28,7 @@ class User
     $_SESSION['login']['lastname'] = $this->lastname;
     $_SESSION['login']['isadmin'] = $this->isadmin;
   }
+
   public static function checkLogin($login)
   {
     $pdo = Db::getConnection();
@@ -36,6 +37,7 @@ class User
     $sttm->execute(array($login));
     return $sttm->fetch(PDO::FETCH_ASSOC);
   }
+
   public static function registerUser($user, $password)
   {
     $pdo = Db::getConnection();
@@ -51,41 +53,48 @@ class User
       return 'Ошибка';
     }
   }
+
   //подсчет количества юзеров в бд. для пагинатора
-  public function getUsersCount()
+  public static function getUsersCount()
   {
     $pdo = Db::getConnection();
     $sttm = $pdo->prepare("SELECT COUNT(*) FROM users");
     $sttm->execute();
     return $sttm->fetchColumn();
   }
+
   //получение юзеров для нужной страницы для пагинатора
-  public function getUsers($offset, $limit)
+  public static function getUsers($offset, $limit)
   {
+    $offset = ($offset - 1) * $limit;
     $pdo = Db::getConnection();
     $sttm = $pdo->prepare("SELECT * FROM users ORDER BY createat DESC LIMIT ".$limit." OFFSET ".$offset);
     $sttm->execute();
     return $sttm->fetchAll(PDO::FETCH_ASSOC);
   }
-  public function getUserById($id)
+
+  public static function getUserById($id)
   {
     $pdo = Db::getConnection();
     $sttm = $pdo->prepare("SELECT * FROM users WHERE id = ?");
     $sttm->execute(array($id));
     return $sttm->fetch();
   }
-  public function updateUser($id, $firstname, $lastname)
+
+  public static function updateUser($id, $firstname, $lastname)
   {
+    $pdo = Db::getConnection();
     try {
       $update ="UPDATE users SET firstname=?, lastname=? WHERE id = ?";
-      $stmt = $this->pdo->prepare($update);
+      $stmt = $pdo->prepare($update);
       $stmt->execute(array($firstname, $lastname, $id));
       return 'Сохранено';
     } catch (PDOException $e) {
       return $e->getMessage();
     }
   }
-  public function deleteUser($id)
+
+  public static function deleteUser($id)
   {
     $pdo = Db::getConnection();
     try {
@@ -97,37 +106,38 @@ class User
       return $e->getMessage();
     }
   }
-  public static function paginateUsers($pdo, $offset, $limit)
+
+  // вывод списка пользователей и пагинатора
+  public static function paginateUsers($offset, $limit)
   {
     $pdo = Db::getConnection();
-    // вывод списка пользователей и пагинатора
-    $cnt = $pdo->getUsersCount();
-    $userlist = $pdo->getUsers($offset, $limit);
+    $cnt = User::getUsersCount();
+    $userlist = User::getUsers($offset, $limit);
     foreach ($userlist as $key => $value)
     {
       echo "<div class='col-xs-6'>".$value['firstname']." ".$value['lastname']."</div>
-      <div class='col-xs-6'><a href='index.php?user=".$value['id']."'>
+      <div class='col-xs-6'><a href='/admin/update/".$value['id']."'>
       <button type='button' class='btn btn-default '>Редактировать</button>
       </a>
-      <a href='index.php?action=delete&id=".$value['id']."'>
-      <button type='button' class='btn btn-default '>Удалить</button>
+      <a href='/admin/delete/".$value['id']."'>
+      <button type='submit' name='submit' class='btn btn-default '>Удалить</button>
       </a></div></br>";
     }
     echo "</br>Всего пользователей: ".$cnt."</br>";
     for ($x=1 ; $x<=ceil($cnt/$limit); $x++ ) {
-      if ($offset==(($x-1)*$limit)) {
+      if ($offset==$x) {
         echo "Страница ".$x." ";
       } else
-      echo "<a href='index.php?list=".($x-1)*($limit)."'>Страница ".$x."</a> ";
+      echo "<a href='/admin/".$x."'>Страница ".$x."</a> ";
     }
   }
-  public static function renderUser($pdo, $id)
+
+  // правка пользователей
+  public static function renderUser($id)
   {
     $pdo = Db::getConnection();
-    // правка пользователей
-    $usr = $pdo->getUserById($id);
-    ob_start();
-    require '../views/user/userform.phtml';
-    return ob_get_clean();
+    $usr = User::getUserById($id);
+    require 'views/user/useredit.phtml';
+    return true;
   }
 }

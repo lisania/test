@@ -1,17 +1,16 @@
 <?php
 return array (
 // Пользователь:
-  'user/register' => 'user/register',
-  'user/login' => 'user/login',
-  'user/logout' => 'user/logout',
-  'main' => 'main/index',
-// Админпанель:
-  'admin' => 'admin/index', // actionIndex в AdminController
+  'user/register' => 'user/register', // actionRegister в UserController
+  'user/login' => 'user/login', // actionLogin в UserController
+  'user/logout' => 'user/logout', // actionLogout в UserController
 // Управление пользователями:
-  'admin/update/([0-9]+)' => 'admin/update/$1',
-  'admin/delete/([0-9]+)' => 'admin/delete/$1',
+  'admin/update/([0-9]+)' => 'admin/update/$1', // actionUpdate в AdminController
+  'admin/delete/([0-9]+)' => 'admin/delete/$1', // actionDelete в AdminController
+// Админпанель:
+  'admin/([0-9]+)' => 'admin/index/$1',
+  'admin' => 'admin/index', // actionIndex в AdminController
 // Главная страница
-  'index.php' => 'site/index', // actionIndex в SiteController
   '' => 'site/index', // actionIndex в SiteController
 );
 ?>

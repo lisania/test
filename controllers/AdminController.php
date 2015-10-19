@@ -2,18 +2,35 @@
 
 class AdminController
 {
-  public function actionIndex()
+  public function actionIndex($list = 1)
   {
-    if ((isset($_GET['action']))&&($_GET['action']=="delete")) {
-      header("Location: index.php");
-      $id = $_GET['id'];
-      $del = $pdo->deleteUser($id);
+    if (empty($list)){
+      $list["0"] = 1;
+    }
+    require_once 'views/user/admin.php';
+    User::paginateUsers(is_numeric($list["0"]) ? $list["0"] : 1, 6);
+    return true;
+  }
+
+  public function actionUpdate($id)
+  {
+    if (is_numeric($id["0"])) {
+      if (isset($_POST['edit_user'])) {
+        header("Location: ");
+        $_SESSION['flash'] = User::updateUser($id["0"], $_POST['firstname'], $_POST['lastname']);
+      }
+      User::renderUser($id["0"]);
+    }
+    return true;
+  }
+
+  public function actionDelete($id)
+  {
+    if (is_numeric($id["0"])) {
+      header("Location: /");
+      $del = User::deleteUser($id["0"]);
       $_SESSION['flash'] = $del;
     }
-
-    User::paginateUsers($pdo, (isset($_GET['list']) && is_numeric($_GET['list']) ? $_GET['list'] : 0), 5);
-    
-    require_once 'views/user/admin.php';
     return true;
   }
 }

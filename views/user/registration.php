@@ -1,7 +1,5 @@
-<?php require 'views/header.phtml'; ?>
-
 <!-- форма регистрации-->
-<form method="post" action="" class="form-signin" role="form">
+<form method="post" action="/user/register" class="form-signin" role="form">
   <h2 class="form-signin-heading">Регистрация</h2>
   <div class="form-group">
     <input type="text" class="form-control" name="firstname" placeholder="Имя" required />
@@ -13,5 +11,3 @@
     <p>Уже зарегистрированы? <a href="/user/login">Войти</a></p>
   </div>
 </form>
-
-<?php require 'views/footer.html'; ?>
